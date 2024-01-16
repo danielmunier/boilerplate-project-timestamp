@@ -31,7 +31,8 @@ app.get("/api/:date?", function (req, res) {
 
     if (!date) {
       const date = new Date()
-      const dateToUnix = Math.floor(date.getTime() / 1000)
+      let dateToUnix = Math.floor(Date.now()/1000)
+
       let data = {
         unix: dateToUnix,
         utc: date.toUTCString()
@@ -47,7 +48,6 @@ app.get("/api/:date?", function (req, res) {
 
   
       let dateObject = new Date(parseInt(date))
-     
 
       let data = {
         unix: parseInt(req.params.date),
