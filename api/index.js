@@ -34,7 +34,7 @@ app.get("/api/:date?", function (req, res) {
       let dateToUnix = Math.floor(Date.now()/1000)
 
       let data = {
-        unix: dateToUnix,
+        unix: Date.now(),
         utc: date.toUTCString()
       }
       return res.json(data)
