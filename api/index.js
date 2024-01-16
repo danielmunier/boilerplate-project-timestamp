@@ -31,7 +31,6 @@ app.get("/api/:date?", function (req, res) {
 
     if (!date) {
       const date = new Date()
-      let dateToUnix = Math.floor(Date.now()/1000)
 
       let data = {
         unix: Date.now(),
@@ -64,7 +63,11 @@ app.get("/api/:date?", function (req, res) {
 
       const parts = date.split("-")
 
-      let unixToDate = new Date(`${parts[0]}-${parts[1]}-${parts[2]}`)
+      const year = parts[0]
+      const mounth = parts[1]
+      const day = parts[2]
+
+      let unixToDate = new Date(year, mounth, day)
       let dateToUnix = Math.floor(unixToDate.getTime() / 1000)
 
       let data = {
