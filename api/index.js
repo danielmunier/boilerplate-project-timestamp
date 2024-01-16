@@ -68,7 +68,7 @@ app.get("/api/:date?", function (req, res) {
       let dateToUnix = Math.floor(unixToDate.getTime() / 1000)
 
       let data = {
-        unix: parseInt(dateToUnix),
+        unix: parseInt(dateToUnix)  * 1000,
         utc: unixToDate.toUTCString()
       }
 
