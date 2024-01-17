@@ -24,10 +24,6 @@ const isInvalidDate = (date) => date.toUTCString() === "Invalid Date"
 
 app.get("/api/:date?", function (req, res) {
   try {
-
-    let date = new Date(parseInt(req.params.date))
-    
-
     if (!req.params.date) {
       res.json({
         unix: new Date().getTime(),
@@ -37,19 +33,23 @@ app.get("/api/:date?", function (req, res) {
       return
     }
 
-    if (isInvalidDate(date)) {
-      date = new Date(parseInt(req.params.date))
-    }
+    let date = new Date(req.params.date)
+    
 
+   
+
+    if (isInvalidDate(date)) {
+      res.json({ error: "Invalid Date" })
+      return
+      
+    }
+    
     res.json({
       unix: date.getTime(),
       utc: date.toUTCString()
     })
 
-    if (isInvalidDate(date)) {
-      res.json({ error: "Invalid Date" })
-      return
-    }
+ 
 
   } catch (e) {
     res.status(400)
