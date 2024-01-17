@@ -19,37 +19,54 @@ app.get("/", function (req, res) {
 });
 
 
-const isInvalidDate = (date) => date.toUTCString() === "Invalid Date"
-
+const isInvalidDate = (date) => new Date(date) == "Invalid Date"
 
 app.get("/api/:date?", function (req, res) {
   try {
-    if (!req.params.date) {
-      res.json({
-        unix: new Date().getTime(),
-        utc: new Date().toUTCString()
-      })
+    let { date } = req.params
 
+
+    if (!date) {
+
+      let unixTimestamp = new Date().valueOf()
+      res.json({
+        unix: unixTimestamp,
+        utc: new Date(unixTimestamp).toUTCString()
+      })
       return
     }
 
-    let date = new Date(req.params.date)
-    
+    if (/^\d{5,}$/.test(date)) {
+      date = parseInt(date)
+      let unixTimestamp = new Date(date).valueOf()
+      res.json({
+        unix: unixTimestamp,
+        utc: new Date(unixTimestamp).toUTCString()
+      })
+      
+    } else {
+
+      if(isInvalidDate(date)) {
+        res.json({
+          error: "Invalid Date"
+        })
+
+        return
+        
+      }
+
+
+      let unixTimestamp = new Date(date).valueOf()
+      res.json({
+        unix: unixTimestamp,
+        utc: new Date(unixTimestamp).toUTCString()
+      })
+    }
 
    
 
-    if (isInvalidDate(date)) {
-      res.json({ error: "Invalid Date" })
-      return
-      
-    }
-    
-    res.json({
-      unix: date.getTime(),
-      utc: date.toUTCString()
-    })
 
- 
+
 
   } catch (e) {
     res.status(400)

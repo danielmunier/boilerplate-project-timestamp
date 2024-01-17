@@ -1,3 +1,4 @@
-const data = new Date(parseInt("25 march 2025"))
+const isInvalidDate = (date) => new Date(date) == "Invalid Date"
 
-console.log(data)
+
+console.log(isInvalidDate("this is not a date"))
