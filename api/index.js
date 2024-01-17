@@ -15,83 +15,47 @@ app.use(express.static('../public'));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
-  res.sendFile(__dirname + "../views/index.html");
+  res.redirect("/api/")
 });
 
 
-// your first API endpoint...
-
-
+const isInvalidDate = (date) => date.toUTCString() === "Invalid Date"
 
 
 app.get("/api/:date?", function (req, res) {
-
   try {
-    let date = req.params.date
 
-    if (!date) {
-      const date = new Date()
+    let date = new Date(parseInt(req.params.date))
+    
 
-      let data = {
-        unix: Date.now(),
-        utc: date.toUTCString()
-      }
-      return res.json(data)
+    if (!req.params.date) {
+      res.json({
+        unix: new Date().getTime(),
+        utc: new Date().toUTCString()
+      })
 
+      return
     }
 
+    if (isInvalidDate(date)) {
+      date = new Date(parseInt(req.params.date))
+    }
 
+    res.json({
+      unix: date.getTime(),
+      utc: date.toUTCString()
+    })
 
-    if (!isNaN(date)) {
-      // UNIX
-
-  
-      let dateObject = new Date(parseInt(date))
-
-      let data = {
-        unix: parseInt(req.params.date),
-        utc: dateObject.toUTCString(),
-      }
-
-      return res.json(data);
-
-    } 
-    
-    else if (Date.parse(date)) {
-      // If its a number and the parse method can return a timestamp
-
-
-      const parts = date.split("-")
-
-      const year = parts[0]
-      const mounth = parts[1]
-      const day = parts[2]
-
-      let unixToDate = new Date(year, mounth, day)
-      let dateToUnix = Math.floor(unixToDate.getTime() / 1000)
-
-      let data = {
-        unix: parseInt(dateToUnix)  * 1000,
-        utc: unixToDate.toUTCString()
-      }
-
-      return res.json(data);
-
-    } else {
+    if (isInvalidDate(date)) {
       res.json({ error: "Invalid Date" })
+      return
     }
 
   } catch (e) {
     res.status(400)
+    return
   }
 
-
-
-  /* 
-    let hours = date.getHours()
-    let minutes = date.getMinutes()
-    let seconds =  date.getSeconds()
-   */
 
 
 });
